@@ -1,0 +1,155 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: var(--transition);
+  padding: 16px 0;
+}
+
+.scrolled {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 2px 20px var(--shadow);
+  padding: 8px 0;
+}
+
+[data-theme="dark"] .scrolled {
+  background: rgba(10, 10, 26, 0.9);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--nav-height);
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: -1px;
+}
+
+.logoAccent {
+  color: var(--primary);
+}
+
+.logoDot {
+  color: var(--accent);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.link {
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-light);
+  transition: var(--transition-fast);
+  position: relative;
+}
+
+.link:hover {
+  color: var(--primary);
+  background: rgba(47, 143, 157, 0.08);
+}
+
+.link.active {
+  color: var(--primary);
+  background: rgba(47, 143, 157, 0.1);
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.themeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-alt);
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.themeToggle:hover {
+  background: var(--primary);
+  color: white;
+  transform: rotate(20deg);
+}
+
+.hireCta {
+  font-size: 0.875rem;
+  padding: 10px 24px;
+}
+
+.burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  color: var(--text);
+}
+
+.mobileOnly {
+  display: none;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 100px 32px 32px;
+    background: var(--bg);
+    box-shadow: -10px 0 40px var(--shadow-lg);
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 4px;
+  }
+
+  .links.open {
+    right: 0;
+  }
+
+  .link {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1rem;
+  }
+
+  .burger {
+    display: flex;
+  }
+
+  .hireCta {
+    display: none;
+  }
+
+  .mobileOnly {
+    display: block;
+    margin-top: 16px;
+  }
+}
