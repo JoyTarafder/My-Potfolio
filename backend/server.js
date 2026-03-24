@@ -18,6 +18,9 @@ import achievementRoutes from './routes/achievementRoutes.js';
 
 const app = express();
 
+// Trust reverse proxy environments (e.g. Render, Heroku) to correctly parse 'X-Forwarded-For' headers
+app.set('trust proxy', 1);
+
 // Connect to MongoDB
 connectDB();
 
