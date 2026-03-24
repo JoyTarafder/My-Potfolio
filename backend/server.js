@@ -44,6 +44,10 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
   message: { success: false, message: 'Too many requests, please try again later' },
+<<<<<<< HEAD
+=======
+  // Disable validation warnings since we've already configured trust proxy above
+>>>>>>> a02dca38f303176e5e7aa951c10f337236cec77b
   validate: { xForwardedForHeader: false },
 });
 app.use('/api/', limiter);
