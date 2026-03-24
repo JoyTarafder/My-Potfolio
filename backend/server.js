@@ -24,13 +24,25 @@ app.set('trust proxy', 1);
 // Connect to MongoDB
 connectDB();
 
+const defaultAllowedOrigins = ['https://joy-tarafder.vercel.app', 'http://localhost:3000'];
+const envAllowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const allowedOrigins = [...new Set([...defaultAllowedOrigins, ...envAllowedOrigins])];
+
 // Middleware
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow any origin to connect, as this is a public portfolio API
-      // and we need to support dynamic Vercel preview environments
-      callback(null, true);
+      // Allow requests from same-origin tools (curl/Postman) that may not send Origin
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(null, false);
     },
     credentials: true,
   })
