@@ -27,11 +27,11 @@ connectDB();
 // Middleware
 app.use(
   cors({
-    origin: [
-      process.env.CLIENT_URL || 'http://localhost:3000',
-      'http://192.168.59.1:3000',
-      'http://127.0.0.1:3000'
-    ],
+    origin: function (origin, callback) {
+      // Allow any origin to connect, as this is a public portfolio API
+      // and we need to support dynamic Vercel preview environments
+      callback(null, true);
+    },
     credentials: true,
   })
 );
