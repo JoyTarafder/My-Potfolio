@@ -1,177 +1,201 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
-import styles from './Contact.module.css';
-import { FiMail, FiPhone, FiMapPin, FiSend, FiCheck } from 'react-icons/fi';
-import { FaLinkedinIn, FaGithub } from 'react-icons/fa';
+import { FiSend, FiMapPin, FiMail, FiPhone } from 'react-icons/fi';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [sending, setSending] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSending(true);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/contact`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        toast.success('Message sent successfully!');
+        setForm({ name: '', email: '', subject: '', message: '' });
+      } else {
+        toast.error(data.message || 'Failed to send message');
+      }
+    } catch {
+      toast.error('Failed to send message. Please try again.');
+    } finally {
+      setSending(false);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // In production, integrate with EmailJS or API route
-    setSent(true);
-    setTimeout(() => setSent(false), 3000);
-    setFormData({ name: '', email: '', message: '' });
+  const handleChange = (e) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
-    <section id="contact" className={`${styles.contact} section`}>
-      <div className={styles.bg} />
-      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+    <section id="contact" className="py-24 px-6 bg-surface dark:bg-dark-bg">
+      <div className="max-w-5xl mx-auto">
         <motion.div
-          className={styles.header}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
         >
-          <span className="section-label">Contact</span>
-          <h2 className="section-title">
-            Let&apos;s Work <span className={styles.highlight}>Together</span>
+          <span className="text-sm font-semibold tracking-widest uppercase text-primary">Contact</span>
+          <h2 className="text-3xl sm:text-4xl font-bold mt-2 text-text-primary dark:text-dark-text-primary tracking-tight">
+            Start a Conversation
           </h2>
-          <p className="section-subtitle">
-            Have a project in mind or want to discuss opportunities? I&apos;d love to hear from you.
-          </p>
+          <div className="w-12 h-1 bg-accent rounded-full mx-auto mt-4" />
         </motion.div>
 
-        <div className={styles.content}>
-          {/* Contact Info */}
+        <div className="grid md:grid-cols-5 gap-8 lg:gap-12">
+          {/* Info Side Bento Card */}
           <motion.div
-            className={styles.info}
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
+            className="md:col-span-2 p-8 lg:p-10 rounded-[2rem] bg-surface-alt dark:bg-dark-surface-alt
+                       border border-border/50 dark:border-dark-border/50 shadow-[var(--shadow-soft)] flex flex-col justify-between"
           >
-            <div className={styles.infoCard}>
-              <div className={styles.infoIcon}>
-                <FiMail size={22} />
-              </div>
-              <div>
-                <h4 className={styles.infoLabel}>Email</h4>
-                <a href="mailto:joytarafder3@gmail.com" className={styles.infoValue}>
-                  joytarafder3@gmail.com
-                </a>
-              </div>
+            <div>
+              <h3 className="text-2xl font-bold text-text-primary dark:text-dark-text-primary mb-4">
+                Let's talk.
+              </h3>
+              <p className="text-text-secondary dark:text-dark-text-secondary leading-relaxed mb-10 font-[family-name:var(--font-dm-sans)]">
+                Got a project in mind, an opportunity, or just want to say hi? I'm currently available for new opportunities.
+              </p>
             </div>
 
-            <div className={styles.infoCard}>
-              <div className={styles.infoIcon}>
-                <FiPhone size={22} />
-              </div>
-              <div>
-                <h4 className={styles.infoLabel}>Phone</h4>
-                <a href="tel:+8801714890199" className={styles.infoValue}>
-                  +880 1714 890199
-                </a>
-              </div>
-            </div>
-
-            <div className={styles.infoCard}>
-              <div className={styles.infoIcon}>
-                <FiMapPin size={22} />
-              </div>
-              <div>
-                <h4 className={styles.infoLabel}>Location</h4>
-                <p className={styles.infoValue}>Dhaka, Bangladesh</p>
-              </div>
-            </div>
-
-            <div className={styles.socials}>
-              <a
-                href="https://www.linkedin.com/in/joytarafder"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.socialLink}
-                aria-label="LinkedIn"
-              >
-                <FaLinkedinIn size={18} />
-              </a>
-              <a
-                href="https://github.com/joytarafder"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.socialLink}
-                aria-label="GitHub"
-              >
-                <FaGithub size={18} />
-              </a>
+            <div className="space-y-6">
+              {[
+                { icon: FiMail, label: 'Email', value: 'joytarafder3@gmail.com' },
+                { icon: FiMapPin, label: 'Location', value: 'Nikunja 2, Khilkhet, Dhaka' },
+                { icon: FiPhone, label: 'Phone', value: '+8801714890199' },
+              ].map(({ icon: Icon, label, value }) => (
+                <div key={label} className="flex items-center gap-5 group cursor-default">
+                  <div className="p-3.5 rounded-2xl bg-surface dark:bg-dark-surface text-primary border border-border/50 dark:border-dark-border/50 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300 shadow-sm">
+                    <Icon size={20} className="stroke-[1.5]" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-text-muted dark:text-dark-text-muted mb-0.5">{label}</p>
+                    <p className="text-base font-medium text-text-primary dark:text-dark-text-primary">{value}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </motion.div>
 
-          {/* Form */}
+          {/* Form Side */}
           <motion.form
-            className={styles.form}
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5 }}
+            onSubmit={handleSubmit}
+            className="md:col-span-3 p-8 lg:p-10 rounded-[2rem] bg-surface dark:bg-dark-surface
+                       border border-border/50 dark:border-dark-border/50 shadow-[var(--shadow-soft)] space-y-6"
           >
-            <div className={styles.formGroup}>
-              <label htmlFor="contact-name" className={styles.label}>
-                Your Name
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="contact-name" className="block text-sm font-semibold text-text-primary dark:text-dark-text-primary mb-2">
+                  Name
+                </label>
+                <input
+                  id="contact-name"
+                  name="name"
+                  required
+                  value={form.name}
+                  onChange={handleChange}
+                  className="w-full px-5 py-4 rounded-2xl bg-surface-alt dark:bg-dark-surface-alt
+                             border-none text-text-primary dark:text-dark-text-primary
+                             focus:outline-none focus:ring-2 focus:ring-primary focus:shadow-[var(--shadow-glow)]
+                             transition-all duration-300 placeholder:text-text-muted/60"
+                  placeholder="John Doe"
+                />
+              </div>
+              <div>
+                <label htmlFor="contact-email" className="block text-sm font-semibold text-text-primary dark:text-dark-text-primary mb-2">
+                  Email
+                </label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  name="email"
+                  required
+                  value={form.email}
+                  onChange={handleChange}
+                  className="w-full px-5 py-4 rounded-2xl bg-surface-alt dark:bg-dark-surface-alt
+                             border-none text-text-primary dark:text-dark-text-primary
+                             focus:outline-none focus:ring-2 focus:ring-primary focus:shadow-[var(--shadow-glow)]
+                             transition-all duration-300 placeholder:text-text-muted/60"
+                  placeholder="john@example.com"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="contact-subject" className="block text-sm font-semibold text-text-primary dark:text-dark-text-primary mb-2">
+                Subject
               </label>
               <input
-                type="text"
-                id="contact-name"
-                name="name"
-                value={formData.name}
+                id="contact-subject"
+                name="subject"
+                value={form.subject}
                 onChange={handleChange}
-                placeholder="John Doe"
-                required
-                className={styles.input}
+                className="w-full px-5 py-4 rounded-2xl bg-surface-alt dark:bg-dark-surface-alt
+                           border-none text-text-primary dark:text-dark-text-primary
+                           focus:outline-none focus:ring-2 focus:ring-primary focus:shadow-[var(--shadow-glow)]
+                           transition-all duration-300 placeholder:text-text-muted/60"
+                placeholder="How can I help you?"
               />
             </div>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="contact-email" className={styles.label}>
-                Your Email
-              </label>
-              <input
-                type="email"
-                id="contact-email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="john@example.com"
-                required
-                className={styles.input}
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="contact-message" className={styles.label}>
+            <div>
+              <label htmlFor="contact-message" className="block text-sm font-semibold text-text-primary dark:text-dark-text-primary mb-2">
                 Message
               </label>
               <textarea
                 id="contact-message"
                 name="message"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Tell me about your project..."
                 required
                 rows={5}
-                className={styles.textarea}
+                value={form.message}
+                onChange={handleChange}
+                className="w-full px-5 py-4 rounded-2xl bg-surface-alt dark:bg-dark-surface-alt
+                           border-none text-text-primary dark:text-dark-text-primary
+                           focus:outline-none focus:ring-2 focus:ring-primary focus:shadow-[var(--shadow-glow)]
+                           transition-all duration-300 resize-none placeholder:text-text-muted/60"
+                placeholder="Tell me about your project..."
               />
             </div>
 
-            <button type="submit" className={`btn btn-primary ${styles.submitBtn}`}>
-              {sent ? (
+            <button
+              type="submit"
+              disabled={sending}
+              className="w-full px-8 py-4 mt-2 rounded-full bg-text-primary hover:bg-black dark:bg-primary dark:hover:bg-primary-light text-surface dark:text-white font-semibold
+                         shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-hover)]
+                         transition-all duration-300 hover:-translate-y-1 active:translate-y-0
+                         disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0
+                         flex items-center justify-center gap-2"
+            >
+              {sending ? (
                 <>
-                  <FiCheck /> Message Sent!
+                  <div className="w-5 h-5 border-2 border-surface/50 border-t-surface rounded-full animate-spin" />
+                  Sending...
                 </>
               ) : (
                 <>
-                  <FiSend /> Send Message
+                  <FiSend size={18} />
+                  Send Message
                 </>
               )}
             </button>

@@ -1,97 +1,73 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import styles from './Education.module.css';
-import { FiBookOpen, FiAward } from 'react-icons/fi';
+import { FiBook, FiAward } from 'react-icons/fi';
 
-const education = [
+const EDUCATION = [
   {
-    degree: 'BSc in Computer Science & Engineering',
-    institution: 'Independent University, Bangladesh (IUB)',
-    period: '2020 — 2025',
-    icon: <FiBookOpen size={22} />,
+    degree: 'Bachelor of Science in Computer Science and Engineering',
+    institution: 'Independent University, Bangladesh',
+    duration: 'Jun 2020 – Jul 2025',
+    description: 'Courses: Data Structures, Algorithms, Database Management Systems, Object-Oriented Programming, Finite Automata, Compiler Construction, Mobile Application Development, Web Application.',
   },
   {
-    degree: 'HSC — Science',
-    institution: 'Ghatail Cantonment College',
-    period: 'Completed',
-    icon: <FiBookOpen size={22} />,
+    degree: 'Higher Secondary School Certificate',
+    institution: 'Ghatail Cantonment College Tangail, Dhaka',
+    duration: 'Jul 2017 - Jun 2019',
+    description: 'Science group.',
   },
-];
-
-const certifications = [
-  'Web Development',
-  'CCNA (Cisco)',
-  'Product Management',
-  'Digital Marketing',
 ];
 
 export default function Education() {
   return (
-    <section id="education" className={`${styles.education} section`}>
-      <div className="container">
+    <section id="education" className="py-24 px-6 bg-surface-alt dark:bg-dark-surface-alt">
+      <div className="max-w-4xl mx-auto">
         <motion.div
-          className={styles.header}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
         >
-          <span className="section-label">Education</span>
-          <h2 className="section-title">
-            Education & <span className={styles.highlight}>Certifications</span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-text-primary dark:text-dark-text-primary tracking-tight">
+            Academic Background
           </h2>
+          <div className="w-12 h-1 bg-accent rounded-full mx-auto mt-4" />
         </motion.div>
 
-        <div className={styles.content}>
-          {/* Education Timeline */}
-          <div className={styles.timeline}>
-            {education.map((edu, i) => (
-              <motion.div
-                key={edu.degree}
-                className={styles.timelineItem}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.5 }}
-              >
-                <div className={styles.timelineIcon}>{edu.icon}</div>
-                <div className={styles.timelineContent}>
-                  <h3 className={styles.degree}>{edu.degree}</h3>
-                  <p className={styles.institution}>{edu.institution}</p>
-                  <span className={styles.period}>{edu.period}</span>
+        <div className="grid md:grid-cols-2 gap-6">
+          {EDUCATION.map((edu, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.15 }}
+              whileHover={{ y: -6 }}
+              className="flex flex-col p-8 rounded-[2rem]
+                         bg-surface dark:bg-dark-surface
+                         border border-border/50 dark:border-dark-border/50
+                         shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-hover)]
+                         transition-all duration-300"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="shrink-0 w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                  {i === 0 ? <FiAward size={24} /> : <FiBook size={24} />}
                 </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Certifications */}
-          <motion.div
-            className={styles.certs}
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <h3 className={styles.certsTitle}>
-              <FiAward size={20} /> Certifications
-            </h3>
-            <div className={styles.certsList}>
-              {certifications.map((cert, i) => (
-                <motion.div
-                  key={cert}
-                  className={styles.certItem}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.1, duration: 0.3 }}
-                >
-                  <span className={styles.certCheck}>✓</span>
-                  {cert}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                <span className="text-xs font-bold tracking-wider uppercase text-text-secondary dark:text-dark-text-secondary">
+                  {edu.duration}
+                </span>
+              </div>
+              
+              <h3 className="text-xl font-bold text-text-primary dark:text-dark-text-primary mb-2 line-clamp-2">
+                {edu.degree}
+              </h3>
+              <p className="text-sm font-semibold text-primary mb-4">{edu.institution}</p>
+              <p className="text-base text-text-secondary dark:text-dark-text-secondary leading-relaxed font-[family-name:var(--font-dm-sans)] mt-auto">
+                {edu.description}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

@@ -1,141 +1,108 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import styles from './Skills.module.css';
-import {
-  FiCode,
-  FiLayout,
-  FiGitBranch,
-  FiServer,
-  FiBox,
-  FiTerminal,
-} from 'react-icons/fi';
+import { useEffect, useState } from 'react';
 
-const skillCategories = [
-  {
-    title: 'Languages',
-    icon: <FiCode size={20} />,
-    skills: [
-      { name: 'JavaScript', level: 90 },
-      { name: 'HTML5', level: 95 },
-      { name: 'CSS3', level: 92 },
-    ],
-  },
-  {
-    title: 'Frameworks',
-    icon: <FiLayout size={20} />,
-    skills: [
-      { name: 'React', level: 88 },
-      { name: 'Next.js', level: 75 },
-      { name: 'Tailwind CSS', level: 90 },
-    ],
-  },
-  {
-    title: 'Tools',
-    icon: <FiTerminal size={20} />,
-    skills: [
-      { name: 'Git', level: 85 },
-      { name: 'Docker', level: 70 },
-      { name: 'VS Code', level: 95 },
-    ],
-  },
-  {
-    title: 'Other',
-    icon: <FiServer size={20} />,
-    skills: [
-      { name: 'REST APIs', level: 82 },
-      { name: 'Responsive Design', level: 92 },
-      { name: 'Performance', level: 80 },
-    ],
-  },
-];
-
-const techIcons = [
-  'HTML5', 'CSS3', 'JavaScript', 'React', 'Next.js',
-  'Tailwind CSS', 'Git', 'Docker', 'REST APIs', 'Framer Motion',
-];
+const CATEGORY_LABELS = {
+  frontend: 'Frontend',
+  backend: 'Backend',
+  tools: 'Tools',
+  design: 'Design',
+  other: 'Other',
+};
 
 export default function Skills() {
+  const [skills, setSkills] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState('all');
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/skills`)
+      .then((r) => r.json())
+      .then((d) => { if (d.success) setSkills(d.data); })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const categories = ['all', ...new Set(skills.map((s) => s.category))];
+  const filtered = activeCategory === 'all' ? skills : skills.filter((s) => s.category === activeCategory);
+
   return (
-    <section id="skills" className={`${styles.skills} section`}>
-      <div className={`${styles.bg}`} />
-      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+    <section id="skills" className="py-24 px-6 bg-surface dark:bg-dark-bg">
+      <div className="max-w-5xl mx-auto">
         <motion.div
-          className={styles.header}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="section-label">Skills</span>
-          <h2 className="section-title">
-            My <span className={styles.highlight}>Tech Stack</span>
-          </h2>
-          <p className="section-subtitle">
-            Technologies and tools I use to bring ideas to life.
-          </p>
-        </motion.div>
-
-        {/* Tech Cloud */}
-        <motion.div
-          className={styles.techCloud}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          className="text-center mb-16"
         >
-          {techIcons.map((tech, i) => (
-            <motion.span
-              key={tech}
-              className={styles.techBubble}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05, duration: 0.3 }}
-              whileHover={{ scale: 1.1, y: -4 }}
-            >
-              {tech}
-            </motion.span>
-          ))}
+          <h2 className="text-3xl sm:text-4xl font-bold text-text-primary dark:text-dark-text-primary tracking-tight">
+            Tools & Craft
+          </h2>
+          <div className="w-12 h-1 bg-primary rounded-full mx-auto mt-4" />
         </motion.div>
 
-        {/* Skill Bars */}
-        <div className={styles.grid}>
-          {skillCategories.map((cat, ci) => (
-            <motion.div
-              key={cat.title}
-              className={styles.category}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: ci * 0.1, duration: 0.5 }}
+        {/* Category tabs */}
+        <div className="flex flex-wrap justify-center gap-3 mb-16">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                activeCategory === cat
+                  ? 'bg-text-primary text-surface dark:bg-primary dark:text-white shadow-[var(--shadow-soft)]'
+                  : 'bg-surface-raised dark:bg-dark-surface-raised text-text-secondary dark:text-dark-text-secondary hover:bg-border dark:hover:bg-dark-border hover:text-text-primary'
+              }`}
             >
-              <div className={styles.catHeader}>
-                <div className={styles.catIcon}>{cat.icon}</div>
-                <h3 className={styles.catTitle}>{cat.title}</h3>
-              </div>
-              <div className={styles.skillsList}>
-                {cat.skills.map((skill) => (
-                  <div key={skill.name} className={styles.skillItem}>
-                    <div className={styles.skillInfo}>
-                      <span className={styles.skillName}>{skill.name}</span>
-                      <span className={styles.skillPercent}>{skill.level}%</span>
-                    </div>
-                    <div className={styles.skillBarBg}>
-                      <motion.div
-                        className={styles.skillBar}
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+              {cat === 'all' ? 'All Skills' : CATEGORY_LABELS[cat] || cat}
+            </button>
           ))}
         </div>
+
+        {loading && (
+          <div className="flex justify-center py-20">
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
+        {/* Skills grid */}
+        {!loading && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+            {filtered.map((skill, i) => (
+              <motion.div
+                key={skill._id || i}
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+                whileHover={{ y: -6, scale: 1.02 }}
+                className="group p-6 rounded-[2rem] text-center
+                           bg-surface-alt dark:bg-dark-surface-alt
+                           border border-border/50 dark:border-dark-border/50
+                           shadow-sm hover:shadow-[var(--shadow-hover)]
+                           transition-all duration-300 flex flex-col items-center justify-center cursor-default"
+              >
+                <div className="text-4xl mb-4 grayscale group-hover:grayscale-0 transition-all duration-500 opacity-80 group-hover:opacity-100 group-hover:scale-110">
+                  {skill.icon || '⚡'}
+                </div>
+                <p className="text-sm font-bold text-text-primary dark:text-dark-text-primary mb-3 tracking-wide">
+                  {skill.name}
+                </p>
+                {/* Proficiency bar */}
+                <div className="w-full h-1.5 rounded-full bg-border dark:bg-dark-border overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${skill.proficiency || 80}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+                    className="h-full rounded-full bg-gradient-to-r from-primary to-accent opacity-80 group-hover:opacity-100"
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

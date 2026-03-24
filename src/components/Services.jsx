@@ -1,72 +1,75 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import styles from './Services.module.css';
-import { FiPenTool, FiCode, FiSmartphone, FiZap } from 'react-icons/fi';
+import { FiCode, FiLayout, FiSmartphone, FiZap } from 'react-icons/fi';
 
-const services = [
+const SERVICES = [
   {
-    icon: <FiPenTool size={28} />,
-    title: 'UI Design',
-    description: 'Creating visually stunning and intuitive user interfaces that captivate and engage users from the first interaction.',
-    index: '01',
+    icon: FiCode,
+    title: 'Web Engineering',
+    description: 'Building robust, scalable applications with React, Next.js, and modern TypeScript architectures.',
   },
   {
-    icon: <FiCode size={28} />,
-    title: 'Frontend Development',
-    description: 'Building robust, scalable web applications using modern frameworks like React with clean, maintainable code.',
-    index: '02',
+    icon: FiLayout,
+    title: 'Interaction Design',
+    description: 'Translating complex requirements into intuitive, fluid, and beautiful user interfaces.',
   },
   {
-    icon: <FiSmartphone size={28} />,
-    title: 'Responsive Web Design',
-    description: 'Crafting fluid layouts that adapt seamlessly across all devices — from mobile phones to large desktop screens.',
-    index: '03',
+    icon: FiSmartphone,
+    title: 'Responsive Layouts',
+    description: 'Crafting pixel-perfect experiences that effortlessly adapt to any screen size or device type.',
   },
   {
-    icon: <FiZap size={28} />,
-    title: 'Performance Optimization',
-    description: 'Fine-tuning applications for maximum speed, minimal load times, and exceptional Lighthouse scores.',
-    index: '04',
+    icon: FiZap,
+    title: 'Performance Tuning',
+    description: 'Optimizing web vitals and overall architecture for lightning-fast speeds and high SEO scores.',
   },
 ];
 
 export default function Services() {
   return (
-    <section id="services" className={`${styles.services} section`}>
-      <div className="container">
+    <section id="services" className="py-24 px-6 bg-surface-alt dark:bg-dark-surface-alt">
+      <div className="max-w-6xl mx-auto">
+        {/* Heading */}
         <motion.div
-          className={styles.header}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-20"
         >
-          <span className="section-label">What I Do</span>
-          <h2 className="section-title">
-            Services I <span className={styles.highlight}>Offer</span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-text-primary dark:text-dark-text-primary tracking-tight">
+            Specialized in
           </h2>
-          <p className="section-subtitle">
-            Comprehensive frontend solutions tailored to bring your digital vision to life.
-          </p>
+          <div className="w-12 h-1 bg-accent rounded-full mx-auto mt-4" />
         </motion.div>
 
-        <div className={styles.grid}>
-          {services.map((service, i) => (
+        {/* Services grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          {SERVICES.map((service, i) => (
             <motion.div
-              key={service.index}
-              className={styles.card}
+              key={service.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              whileHover={{ y: -8 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              whileHover={{ y: -6 }}
+              className="group p-8 rounded-3xl
+                         bg-surface dark:bg-dark-surface
+                         shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-hover)]
+                         border border-border/50 dark:border-dark-border/50
+                         transition-all duration-300"
             >
-              <span className={styles.cardIndex}>{service.index}</span>
-              <div className={styles.cardIcon}>{service.icon}</div>
-              <h3 className={styles.cardTitle}>{service.title}</h3>
-              <p className={styles.cardDesc}>{service.description}</p>
-              <div className={styles.cardLine} />
+              <div className="w-16 h-16 rounded-2xl bg-surface-raised dark:bg-dark-surface-raised text-text-primary dark:text-dark-text-primary flex items-center justify-center
+                              group-hover:bg-primary group-hover:text-surface group-hover:scale-110 group-hover:-rotate-3 transition-all duration-300 mb-6 shadow-sm">
+                <service.icon size={26} strokeWidth={1.5} />
+              </div>
+              <h3 className="text-xl font-bold text-text-primary dark:text-dark-text-primary mb-3">
+                {service.title}
+              </h3>
+              <p className="text-base text-text-secondary dark:text-dark-text-secondary leading-relaxed font-[family-name:var(--font-dm-sans)]">
+                {service.description}
+              </p>
             </motion.div>
           ))}
         </div>
