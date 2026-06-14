@@ -98,8 +98,8 @@ export default function About() {
 
               <div className="pt-2">
                 <a
-                  href="/CV_Joy_Tarafder.pdf"
-                  download="CV_Joy_Tarafder.pdf"
+                  href="/Joy_Tarafder_CV.pdf"
+                  download="Joy_Tarafder_CV.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-3.5 rounded-full bg-text-primary hover:bg-black dark:bg-primary dark:hover:bg-primary-light text-surface dark:text-white font-medium transition-all duration-300 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-hover)] hover:-translate-y-1"
